@@ -19,5 +19,9 @@ Thumbs.db
 *.swp
 *.swo
 
+# 本地 Agent 运行状态
+.claude/
+.meta-kim/
+
 # 飞书同步脚本（含凭证配置，不提交）
 scripts/

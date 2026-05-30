@@ -17,6 +17,10 @@
 
 ## 为什么用 Docker 部署 OpenClaw？
 
+
+
+
+
 > **官方文档**：[docs.openclaw.ai/install/docker](https://docs.openclaw.ai/install/docker)
 
 在聊具体操作之前，先搞清楚一个问题：我直接装不行吗，为什么要折腾 Docker（容器化平台，把应用和环境打包在一起运行）？
@@ -118,13 +122,18 @@ docker compose version         # 确认 Compose v2（不带横杠）
 
 ## 官方 Docker 镜像使用
 
+
 ### 拉取官方镜像
 
 ```bash
 docker pull openclaw/openclaw:latest    # 最新稳定版
-docker pull openclaw/openclaw:v2026.4.24  # 指定版本
+docker pull openclaw/openclaw:v2026.5.27  # 指定版本
 docker images | grep openclaw           # 查看本地镜像
 ```
+
+> **v2026.5.27 发布校验**：OpenClaw 根 npm 包和 OpenClaw-owned npm plugins 已引入 generated shrinkwrap，并支持适合插件 tarball 的 bundled runtime dependencies。Docker / npm 生产部署时，优先用官方发布包和固定 tag；自建镜像要保留 package integrity check，不要为了减小镜像随手删 lockfile / shrinkwrap。v2026.5.27 release notes 同时给出了 npm tarball integrity、Docker runtime workspace template smoke、postpublish checks 和完整 release CI evidence，生产升级时要把这些证据当成验收入口。
+
+> **安全补丁提示**：这一轮还包含 `protobufjs` 8.4.0 安全更新。生产镜像不要长期停在旧 tag；升级镜像后用 `openclaw doctor` 和容器健康检查确认 Gateway、插件和 channels 都仍能启动。
 
 ### 从仓库 Dockerfile 构建镜像
 
@@ -148,9 +157,21 @@ docker build --build-arg OPENCLAW_DOCKER_APT_PACKAGES="ffmpeg imagemagick" \
 | 标签 | 说明 | 适用场景 |
 |------|------|---------|
 | `latest` | 最新稳定版 | 生产环境 |
-| `vYYYY.M.D` | 指定版本号（如 `v2026.4.24`） | 需要版本锁定 |
+| `vYYYY.M.D` | 指定版本号（如 `v2026.5.27`） | 需要版本锁定 |
 | `nightly` | 每日构建 | 尝鲜新功能 |
 | `local` | 本地构建 | 自定义需求 |
+
+### Gateway ready 与 restart trace
+
+v2026.5.22 对 Gateway 启动路径做了多处性能和诊断优化：插件元数据、channel catalog、startup-idle plugin work、ACPX runtime 会尽量延迟或缓存，Gateway ready 信号不再被未用到的 handler tree 阻塞。
+
+生产部署的健康检查建议区分三件事：
+
+1. 容器进程是否存活。
+2. Gateway `/readyz` 或状态命令是否 ready。
+3. channel sidecar、插件服务、meeting notes 等可选能力是否已启动。
+
+如果 restart 变慢或 ready 抖动，先看 restart trace 和 Gateway 日志，不要直接扩大超时时间掩盖问题。
 
 ### 快速启动单容器
 
@@ -302,6 +323,7 @@ docker compose pull && docker compose up -d   # 更新镜像并重启
 ---
 
 ## 环境变量配置大全
+
 
 ### .env 文件模板
 
@@ -952,6 +974,8 @@ docker run --rm \
 find "${BACKUP_DIR}" -maxdepth 1 -type d -mtime +30 -exec rm -rf {} \;
 echo "Backup completed: ${BACKUP_DIR}/${DATE}"
 ```
+
+> **v2026.5.22 备份命名**：新版更倾向使用 local-time backup archive names。生产脚本里建议保留时区信息或在备份目录旁写入 `date -Is` 输出，方便跨服务器恢复时判断备份先后。
 
 ### 恢复流程
 

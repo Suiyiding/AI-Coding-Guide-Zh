@@ -63,7 +63,7 @@ pnpm config get global-bin-dir
 
 **现象：** 安装时报错 `engine "node" is incompatible` 或运行时出现语法错误。
 
-**原因：** OpenClaw 当前官方建议使用 Node.js 24.x；22.14+ 仍然兼容。低于兼容线时，常见报错就是 `engine incompatible`、运行时语法错误或部分 API 不可用。
+**原因：** OpenClaw 当前官方建议使用 Node.js 24.x；22.19+ 仍然兼容。低于兼容线时，常见报错就是 `engine incompatible`、运行时语法错误或部分 API 不可用。
 
 **解决方案：**
 
@@ -922,6 +922,7 @@ openclaw models aliases add quick-chat "openai/gpt-5.2-mini"
 ---
 
 ## 四、技能和工具问题
+
 
 > 📌 **本节包含 10 个问题：**
 > [Q36: 技能不生效](#q36-技能skill不生效ai-不执行) | [Q37: 自定义技能报错](#q37-自定义技能报错) | [Q38: 工具执行失败](#q38-工具tool执行失败) | [Q39: 禁用工具](#q39-怎么禁用某个工具) | [Q40: 添加新工具](#q40-怎么给-ai-添加新工具) | [Q41: 技能中途中断](#q41-技能执行到一半中断了) | [Q42: 查看工具调用](#q42-怎么查看-ai-调用了哪些工具) | [Q43: 内置技能列表](#q43-内置技能列表在哪里看) | [Q44: 技能冲突](#q44-技能之间会冲突吗) | [Q45: 分享技能](#q45-怎么分享自定义技能给别人)
@@ -1792,7 +1793,7 @@ openclaw skills check my-awesome-skill --input "测试"
 | 维度 | ChatGPT | OpenClaw |
 |------|---------|----------|
 | 本质 | AI 聊天产品 | AI Agent 框架 |
-| 模型 | 只能用 OpenAI 的模型 | 支持 29+ 提供商 |
+| 模型 | 只能用 OpenAI 的模型 | 支持多个主流提供商 |
 | 平台 | 网页/App | WhatsApp/Telegram/Discord 等 |
 | 工具 | 有限的插件 | 可扩展的工具和技能系统 |
 | 记忆 | 平台管理 | 你自己控制（本地 Markdown） |
@@ -1887,14 +1888,17 @@ Gateway 是基础设施层，Agent 是业务逻辑层。一个 Gateway 可以服
 
 ---
 
-## 十一、版本升级与迁移（v2026.3.28 → v2026.4.24）
+## 十一、版本升级与迁移（v2026.3.28 → v2026.5.27）
+
 
 > 📌 **本节包含 4 个问题：**
-> [Q80: 升级要点](#q80-从-v202632x-升级到-v202642x-有哪些注意事项) | [Q81: 反向代理配置变更](#q81-升级后反向代理配置需要改吗) | [Q82: 插件白名单变更](#q82-升级后-allowlist-相关操作报权限错误) | [Q83: 性能提升](#q83-升级后启动变快了是正常的吗)
+> [Q80: 升级要点](#q80-从-v202632x-升级到-v2026522-有哪些注意事项) | [Q81: 反向代理配置变更](#q81-升级后反向代理配置需要改吗) | [Q82: 插件白名单变更](#q82-升级后-allowlist-相关操作报权限错误) | [Q83: 性能提升](#q83-升级后启动变快了是正常的吗)
 
-### Q80: 从 v2026.3.2x 升级到 v2026.4.2x 有哪些注意事项？
+### Q80: 从 v2026.3.2x 升级到 v2026.5.27 有哪些注意事项？
 
-**说明：** v2026.4.x 系列包含多项安全加固和功能改进。大部分配置向后兼容，但以下几点需要注意：
+> **v2026.5.27 新增关注点**：除了 v2026.4.24 的 Google Meet、DeepSeek V4、浏览器坐标点击和模型目录 manifest 化，以及 v2026.5.22 的 Gateway 性能、Meeting Notes、shrinkwrap / runtime deps、`protobufjs` 8.4.0 和默认子 Agent bootstrap context 收窄之外，v2026.5.26 / v2026.5.27 还重点改进 Transcript 核心化、Control UI Activity、Talk / Discord voice、Telegram durable delivery、iMessage / WhatsApp / Signal reaction approvals、OpenAI-compatible embedding provider、DeepInfra / Pixverse / VLLM 模型能力、Docker runtime workspace templates 和多项安全边界。升级后如果发现模型、通道或插件行为变化，先运行 `openclaw doctor`，再对照当前 release notes。
+
+**说明：** 从 v2026.4.x 到 v2026.5.27 的升级包含多项安全加固、性能优化和通道能力更新。大部分配置向后兼容，但以下几点需要注意：
 
 1. **Owner-Enforced Commands（v2026.4.5+）**：`/allowlist add` 和 `/allowlist remove` 现在需要 Owner 身份验证。如果你之前在自动化脚本中使用了这些命令，需要确保调用者具有 Owner 权限
 2. **转发头安全检查（v2026.4.x+）**：如果你使用反向代理，Gateway 现在会检查转发头的一致性（详见 Q81）

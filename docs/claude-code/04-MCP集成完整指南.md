@@ -9,8 +9,8 @@
 > - **个人博客**：https://aiking.dev
 > - **预计学时**：4-6小时
 > - **难度等级**：⭐⭐ 入门级（有Claude Code基础即可）
-> - **更新日期**：2026年4月
-> - **适用版本**：MCP规范 2025-11-25 / Claude Code v2.1.133（验证于 2026-05-08）
+> - **更新日期**：2026年5月30日
+> - **适用版本**：MCP规范 2025-11-25 / Claude Code v2.1.158（验证于 2026-05-30）
 > - **前置要求**：已完成Claude Code安装和基础使用
 
 ---
@@ -119,6 +119,7 @@
 ---
 
 ## 第一部分：MCP简介（5分钟快速理解）
+
 
 ### 1.1 MCP是什么
 
@@ -232,6 +233,7 @@ Claude Code（通过Brave Search MCP）：
 ---
 
 ## 第二部分：5分钟快速开始（立即见效）
+
 
 > **本节目的**：用最快速度配置第一个MCP服务器，让你立即看到效果！
 >
@@ -436,6 +438,7 @@ Claude Code：
 ---
 
 ## 第三部分：常用MCP服务器配置（实战为主）
+
 
 > **本节目的**：学会配置10+最常用的MCP服务器
 >
@@ -2331,14 +2334,14 @@ npm publish --access public
 ---
 
 > 📌 **信息来源**：
-> - [MCP官方文档](https://modelcontextprotocol.io/) | 验证日期：2026-04-05
-> - [GitHub MCP Server仓库](https://github.com/modelcontextprotocol/servers) | 验证日期：2026-04-05
-> - [Claude Code文档](https://code.claude.com/docs/en/mcp) | 验证日期：2026-04-05
+> - [MCP官方文档](https://modelcontextprotocol.io/) | 验证日期：2026-05-30
+> - [GitHub MCP Server仓库](https://github.com/modelcontextprotocol/servers) | 验证日期：2026-05-30
+> - [Claude Code文档](https://code.claude.com/docs/en/mcp) | 验证日期：2026-05-30
 
 **作者**：老金
-**更新日期**：2026年4月5日
-**版本**：V1.4（v2.1.90 release 摘录入差量）
+**更新日期**：2026年5月30日
+**版本**：V1.5（v2.1.158 release 摘录入差量）
 **字数统计**：约3,500行 / 28,000字
-**适用版本**：MCP规范 2025-11-25 / Claude Code v2.1.133
+**适用版本**：MCP规范 2025-11-25 / Claude Code v2.1.158
 
 ---

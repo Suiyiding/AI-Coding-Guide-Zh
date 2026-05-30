@@ -9,8 +9,8 @@
 > - **个人博客**：https://aiking.dev
 > - **预计学时**：2-3小时
 > - **难度等级**：⭐⭐⭐ 进阶
-> - **更新日期**：2026年4月
-> - **适用版本**：Claude Code v2.1.133（验证于 2026-05-08）
+> - **更新日期**：2026年5月30日
+> - **适用版本**：Claude Code v2.1.158（验证于 2026-05-30）
 > - **信息来源**：
 >   - [Claude Code 官方文档 - Channels](https://code.claude.com/docs/en/channels)
 >   - [Claude Code 官方文档 - Scheduled tasks](https://code.claude.com/docs/en/scheduled-tasks)
@@ -44,6 +44,7 @@ Channels 和计划任务，解决的是两类不同问题：
 ---
 
 ## 2. Channels 是什么
+
 
 官方当前定义里，Channels 是：
 
@@ -86,6 +87,8 @@ Channels 和计划任务，解决的是两类不同问题：
 
 ## 4. 开始前准备
 
+> **v2.1.139+ 注意**：当环境中设置 `ANTHROPIC_API_KEY`、`apiKeyHelper` 或 `ANTHROPIC_AUTH_TOKEN` 时，`/schedule`、Remote Control、claude.ai MCP connectors 和通知偏好会被禁用。Channels / 计划任务教程默认按 Claude.ai 登录路径讲解；企业 API key 环境请先核对当前 `/status`。
+
 ### 4.1 基础条件
 
 - Claude Code 已安装并登录 claude.ai
@@ -102,6 +105,7 @@ Channels 和计划任务，解决的是两类不同问题：
 ---
 
 ## 5. 最推荐的入门方式：fakechat
+
 
 如果你第一次接触 Channels，别一上来就配 Telegram。
 
@@ -156,6 +160,7 @@ http://localhost:8787
 ---
 
 ## 6. Telegram / Discord / iMessage 的核心模式
+
 
 它们虽然接法不同，但逻辑一致：
 
@@ -589,4 +594,4 @@ claude --resume
 
 ---
 
-> **最后更新**：2026年5月8日 | **适用版本**：Claude Code v2.1.133
+> **最后更新**：2026年5月30日 | **适用版本**：Claude Code v2.1.158

@@ -15,7 +15,7 @@
 > - **个人博客**：https://aiking.dev
 > - **预计学时**：2-3小时
 > - **难度等级**：⭐⭐ 入门级
-> - **更新日期**：2026年5月
+> - **更新日期**：2026年5月30日
 > - **信息来源**：OpenAI Codex App Review、GitHub integration、Codex Cloud/Web、CLI review 官方文档
 > - **前置要求**：已完成 [CX-01 安装](./CX-01-Codex-App安装与认证完整指南.md)、[CX-02 桌面工作流](./CX-02-Codex-App桌面工作流完整指南.md)、[CX-07 Plugins](./CX-07-Codex-Plugins连接器完整指南.md)
 
@@ -75,6 +75,7 @@ Codex 写完代码后，不要只看它的总结。你应该进入 Review：
 
 ## 2. 一个完整 App 改动流程
 
+
 ```text
 目标：修复登录页移动端按钮换行问题。
 范围：只改 src/pages/login.tsx 和 src/styles/login.css。
@@ -106,6 +107,17 @@ Review 不是只看“Codex 说完成了”。逐项看：
 | Push / PR | 是否推到正确分支和远端 |
 
 如果 Review 中发现问题，优先用行内评论或明确提示让 Codex 修，不要重新开一个含糊的大任务。
+
+### 3.1 Review 的严重程度分级
+
+| 级别 | 例子 | 处理 |
+|---|---|---|
+| P0 必修 | 泄露 secret、删库脚本、绕过权限、改错业务逻辑 | 立即停止，人工处理 |
+| P1 必修 | 测试失败、范围外核心文件、破坏兼容性 | 让 Codex 定点修复后重新 Review |
+| P2 建议修 | 命名不清、重复逻辑、缺少边界测试 | 看时间和风险决定是否修 |
+| P3 可后续 | 文案、格式、非阻塞优化 | 记录到后续任务 |
+
+不要把所有 review comment 都当成同一优先级。Codex 很容易为了修小建议扩大 diff，真正要拦的是 P0/P1。
 
 ## 4. `/review` 的用法
 
@@ -142,6 +154,7 @@ GitHub Connector / integration 适合：
 
 ## 6. 从 App 到 GitHub PR
 
+
 典型流程：
 
 ```text
@@ -162,7 +175,18 @@ App thread
 根据当前 diff 写一个简短 commit message。不要执行 git commit。
 ```
 
+### 6.1 提交前让 Codex 做“反向解释”
+
+在真正提交前，让 Codex 解释 diff 而不是继续写：
+
+```text
+请基于当前 diff 反向解释：每个文件为什么必须改、对应哪个需求、验证证据是什么、还有什么没覆盖。不要修改文件。
+```
+
+如果它解释不清某个文件为什么改，通常说明这个文件要么是范围外改动，要么需要你重新审。
+
 ## 7. PR 前验收清单
+
 
 创建 PR 前确认：
 
@@ -292,14 +316,14 @@ codex review --help
 
 ### C. 推荐学习资源
 
-- **Codex Review 官方文档**：https://developers.openai.com/codex/review
+- **Codex App Review 官方文档**：https://developers.openai.com/codex/app/review
 - **本系列上一篇**：[CX-09 Automations](./CX-09-Codex-Automations后台任务完整指南.md)
 - **本系列下一篇**：[CX-11 Web / Cloud 辅助](./CX-11-Codex-Web-Cloud辅助指南.md)
 
 ---
 
 **课程制作**：老金
-**最后更新**：2026年5月
+**最后更新**：2026年5月30日
 **许可**：本课程采用CC BY-NC-SA 4.0许可
 
 ---

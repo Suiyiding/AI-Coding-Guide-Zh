@@ -9,8 +9,8 @@
 > - **个人博客**：https://aiking.dev
 > - **预计学时**：6-8小时
 > - **难度等级**：⭐⭐⭐ 中级进阶
-> - **更新日期**：2026年4月
-> - **适用版本**：Claude Code v2.1.133（验证于 2026-05-08）
+> - **更新日期**：2026年5月30日
+> - **适用版本**：Claude Code v2.1.158（验证于 2026-05-30）
 > - **信息来源**：[官方概览](https://platform.claude.com/docs/zh-CN/agent-sdk/overview)、[GitHub Python SDK](https://github.com/anthropics/claude-agent-sdk-python)、[GitHub TypeScript SDK](https://github.com/anthropics/claude-agent-sdk-typescript)
 
 > **版本说明**：Claude Agent SDK（原名Claude Code SDK）是2025年Anthropic官方发布的开发工具包。本教程基于最新官方文档编写，如有更新请以官方为准。
@@ -113,6 +113,7 @@
 ---
 
 ## 第一部分：Claude Agent SDK 简介
+
 
 ### 1.1 什么是 Claude Agent SDK
 
@@ -244,6 +245,7 @@ import { query } from '@anthropic-ai/claude-agent-sdk';
 ---
 
 ## 第二部分：5分钟快速开始
+
 
 ### 2.1 环境准备
 
@@ -453,6 +455,7 @@ npx ts-node src/hello-agent.ts
 ---
 
 ## 第三部分：核心概念深度解析
+
 
 ### 3.1 query函数：SDK的核心入口
 
@@ -1904,7 +1907,7 @@ async def rate_limited_query(prompts, delay=1.0):
 ---
 
 **课程版本**：V1.2
-**最后更新**：2026年4月5日
+**最后更新**：2026年5月30日
 **作者**：老金
 
 ---

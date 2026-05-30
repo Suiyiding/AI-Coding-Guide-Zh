@@ -13,7 +13,7 @@
 > - **个人博客**：https://aiking.dev
 > - **预计学时**：2-3小时
 > - **难度等级**：⭐⭐ 入门级
-> - **更新日期**：2026年5月
+> - **更新日期**：2026年5月30日
 > - **信息来源**：OpenAI Codex CLI、CLI Slash Commands、Config、MCP、Review 官方文档
 > - **前置要求**：已完成 [CX-01 安装](./CX-01-Codex-App安装与认证完整指南.md)
 
@@ -61,6 +61,9 @@
 
 ## 1. CLI 的定位
 
+
+> **v0.135.0 CLI 基线**：`codex remote-control` 前台化并报告 readiness；goals 默认启用；permission profiles 增加 list API、继承、managed `requirements.toml`、named profiles 与 Windows sandbox 强化；plugin discovery 更容易检查；extension lifecycle 可观察 subagent start/stop、tool execution、turn metadata 和 async approval / turn processing。v0.134.0 / v0.135.0 还补充了本地会话历史搜索、`--profile` 主选择器、MCP per-server environment / OAuth、read-only MCP 并发、`codex doctor` 丰富诊断、远程 `/status`、Vim text object、Python SDK `Sandbox` presets 和 `CODEX_NON_INTERACTIVE=1` 非交互安装。安装方式以官方 CLI 文档为准，不再只写 npm。
+
 CLI 是 App 的辅助工具，适合：
 
 - 排查配置。
@@ -99,7 +102,33 @@ App 用户学习 CLI 的顺序：
 
 不要先背参数表。CLI 版本变化快，本机 `--help` 比教程里的静态列表可靠。
 
+### 2.1 v0.129.0 到 v0.135.0：先用本机命令确认差量
+
+这几版变化集中在 CLI 可观测性、远程执行、权限配置和 SDK，而不是“多背几个参数”。升级后先做四个确认：
+
+```bash
+codex --version
+codex doctor
+codex remote-control --help
+codex plugin --help
+```
+
+重点看这些能力是否已在你本机暴露：
+
+| 版本段 | 你应该确认什么 | 教程里的使用方式 |
+|---|---|---|
+| v0.129.0 | `/vim` composer、默认 Vim mode、`/keymap debug`、workspace plugin sharing、`/hooks` 浏览与开关 | 输入体验、插件共享和 hooks 排查都先用内置入口确认 |
+| v0.130.0 | `codex remote-control` 顶层入口、plugin share metadata / discoverability、live thread config refresh、thread pagination、Windows sandbox runtime cache | 远程控制、插件分享和 App server 排查时先看 readiness / config 是否刷新 |
+| v0.131.0 | TUI session controls、`@` mentions 搜索文件 / 目录 / plugins / skills、`codex doctor` | 交互模式先用 `/help` 和 `@` 试搜索，不要手写路径 |
+| v0.132.0 | Python SDK 认证、`codex exec resume --output-schema`、remote executor 标准认证、图片 fidelity、session picker | 自动化任务需要结构化输出时优先用 `exec resume --output-schema` |
+| v0.133.0 | Goals 默认启用、permission profiles list / inheritance / managed `requirements.toml`、plugin discovery、extension lifecycle events | 把 `/goal`、权限 profiles、插件排查当成稳定教学入口 |
+| v0.134.0 | 本地会话历史搜索、`--profile` 主选择器、MCP per-server environment / streamable HTTP OAuth、read-only MCP 并发、extension / hook 上下文增强 | 迁移旧 profile 配置，排查 MCP 时先看 server environment 和 OAuth 选项 |
+| v0.135.0 | `codex doctor` 环境/Git/终端/app-server/thread 诊断、远程 `/status`、named permission profiles、Vim text object、Python SDK `Sandbox` presets、非交互安装 | 支持工单排查、CI 安装和 SDK 自动化时优先用新版诊断和 preset |
+
+v0.135.0 也补了几类“看起来小、实际影响学习体验”的 TUI 修复：Markdown 表格和多行列表更容易读，macOS / Zellij 下输出不再容易覆盖 composer，slash command 补全会保留已有草稿，resume flow 可以按需包含 non-interactive exec sessions，App mentions 会过滤不可访问或已禁用的 App。写教程和排障时，这些不用当成新命令背，但可以解释“为什么升级后终端界面突然更稳了”。
+
 ## 3. 审批与沙盒
+
 
 CLI 常见参数：
 
@@ -150,7 +179,20 @@ codex exec "read the repo and summarize test commands"
 codex exec "Read package.json and AGENTS.md. Report the install, test, lint, and build commands. Do not modify files."
 ```
 
+### 4.1 恢复会话并保持结构化输出
+
+v0.132.0 以后，`codex exec resume` 可配合 `--output-schema` 使用。它适合“上一次自动化任务已有上下文，这次继续处理，但输出仍必须是 JSON”的场景。
+
+```bash
+codex exec resume <session-id> \
+  --output-schema ./schemas/audit-result.schema.json \
+  "Continue the dependency audit and return only schema-valid JSON."
+```
+
+不要把它当成普通聊天续写。它的价值是让 CI、定时任务或批处理在保留上下文时仍能拿到可校验产物。
+
 ## 5. `codex review`
+
 
 终端审查当前改动：
 
@@ -182,12 +224,44 @@ App 用户重点掌握：
 
 如果这些命令没有出现在你本机 `/help`，以本机输出为准，不要按教程硬敲。
 
+### 6.0 `/vim` 和键盘排查
+
+v0.129.0 起，CLI TUI composer 支持 `/vim`。如果你习惯 Vim，可以在当前会话里开启 modal editing；团队教程不要默认要求所有人开 Vim mode，因为新手会被 Normal / Insert 模式卡住。
+
+键盘快捷键异常时先用：
+
+```text
+/keymap debug
+```
+
+它适合排查终端是否正确上报组合键，不适合写进普通工作流步骤。
+
+### 6.1 `/goal`、`@` mentions 和 session picker
+
+v0.133.0 起 Goals 默认启用，并有专用存储追踪 active turns 之间的进度。写 `/goal` 时要给明确停止条件：
+
+```text
+/goal Finish the docs link audit. Stop when every broken local link has either been fixed or listed with a reason.
+```
+
+v0.131.0 起，`@` mentions 搜索范围更宽，能覆盖文件、目录、plugins 和 skills。路径不确定时，优先在 TUI 里输入 `@` 搜索，而不是复制一长串容易出错的路径。
+
+session picker 在 v0.132.0 后更适合恢复旧线程：重命名线程会显示 `name (thread-id)`，粘贴文本也能用于搜索。找不到旧任务时，先用 picker 搜标题关键词，再决定是否用 `codex exec resume`。
+
 ## 7. CLI 管理 MCP / Plugins
 
 当 App 中看不到工具或需要团队统一配置时：
 
 ```bash
 codex mcp --help
+codex plugin --help
+```
+
+v0.133.0 改进了 plugin discovery 输出。排查插件时不要只问“装没装”，还要看它来自哪个 marketplace、当前安装版本、远程 collection 是否可见：
+
+```bash
+codex plugin list
+codex plugin marketplace --help
 codex plugin --help
 ```
 
@@ -199,6 +273,23 @@ CLI 改完 MCP 或插件后，仍要回 App 验收：
 2. 线程中能否调用。
 3. 权限提示是否符合预期。
 4. 是否能撤销或禁用。
+
+## 8. `codex remote-control` 最小排查流程
+
+v0.130.0 新增顶层 `codex remote-control` 入口，v0.133.0 又把它前台化并增加 readiness 反馈。排查时不要只看“命令有没有返回”，按这个顺序：
+
+```bash
+codex remote-control --help
+codex remote-control
+```
+
+启动后确认三件事：
+
+1. 终端显示 ready 或 machine status。
+2. App / 远端客户端能看到同一台机器。
+3. 退出前明确停止前台进程，避免误以为它是后台 daemon。
+
+如果你需要长期后台服务，优先查当前 App server / Remote Connections 官方文档，不要把 `remote-control` 当成无监督系统服务。
 
 ## 8. CI 安全原则
 
@@ -263,7 +354,7 @@ CLI 改完 MCP 或插件后，仍要回 App 验收：
 ---
 
 **课程制作**：老金
-**最后更新**：2026年5月
+**最后更新**：2026年5月30日
 **许可**：本课程采用CC BY-NC-SA 4.0许可
 
 ---

@@ -9,8 +9,8 @@
 > - **个人博客**：https://aiking.dev
 > - **预计学时**：4-6小时
 > - **难度等级**：⭐⭐ 入门级（有Claude Code基础即可）
-> - **更新日期**：2026年4月
-> - **适用版本**：Claude Code v2.1.133（验证于 2026-05-08）
+> - **更新日期**：2026年5月30日
+> - **适用版本**：Claude Code v2.1.158（验证于 2026-05-30）
 > - **前置要求**：已完成Claude Code安装和基础使用
 
 ---
@@ -122,6 +122,7 @@
 ---
 
 ## 第一部分：Hooks简介（5分钟理解）
+
 
 ### 1.1 Hooks是什么
 
@@ -299,7 +300,10 @@ Claude处理提示词
 
 ---
 
+> **v2.1.139→v2.1.158 关键更新**：Hook exec form 支持 `args: string[]`，避免路径占位符被 shell quoting 破坏；`PostToolUse` 支持 `continueOnBlock`；Hook JSON 输出新增 `terminalSequence`；`Stop` / `SubagentStop` 输入可包含 `background_tasks` 与 `session_crons`。v2.1.152 又补充了 `SessionStart.reloadSkills`、`hookSpecificOutput.sessionTitle` 和 `MessageDisplay` hook，适合在会话启动时安装/刷新 Skills、设置标题，或在展示阶段隐藏/转换助手消息文本。
+
 ## 第二部分：5分钟快速开始（立即见效）
+
 
 > **本节目的**：用最快速度配置第一个Hook，让你立即看到效果！
 >
@@ -614,6 +618,7 @@ echo '{"tool_name": "Write", "tool_input": {"file_path": "test.txt"}}' | python 
 ---
 
 ## 第三部分：15种Hook类型详解
+
 
 > **本节目的**：掌握所有Hook类型的用法
 >

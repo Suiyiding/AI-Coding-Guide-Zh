@@ -15,7 +15,7 @@
 > - **个人博客**：https://aiking.dev
 > - **预计学时**：1-2小时
 > - **难度等级**：⭐⭐ 入门级
-> - **更新日期**：2026年5月
+> - **更新日期**：2026年5月30日
 > - **信息来源**：OpenAI Codex Web/Cloud、GitHub integration、Environments、Secrets 官方文档
 > - **前置要求**：已完成 [CX-01 安装](./CX-01-Codex-App安装与认证完整指南.md)、[CX-02 桌面工作流](./CX-02-Codex-App桌面工作流完整指南.md)、[CX-10 Review/PR](./CX-10-Codex-Review-GitHub-PR完整指南.md)
 
@@ -120,7 +120,23 @@ Cloud environment 定义云端任务怎么跑：
 
 Cloud 不是“更强的本地 App”。它缺少你的本机文件、GUI 状态和本地服务，必须靠远程仓库和 environment 复现。
 
+### 4.1 App 转 Cloud 前的最小交接包
+
+不要只写“帮我继续修”。给 Cloud 的任务要包含：
+
+```text
+仓库/分支：owner/repo 的 feature/login-mobile 分支。
+目标：修复登录页移动端按钮溢出。
+范围：只改 src/pages/login.tsx、src/styles/login.css 和相关测试。
+环境：使用 pnpm install --frozen-lockfile；验证 pnpm test -- login 和 pnpm lint。
+限制：不要改认证逻辑，不要新增依赖，不要接触 secrets。
+交付：打开 PR 或更新现有 PR，PR 描述包含 Summary / Verification / Risk。
+```
+
+这份交接包能减少 Cloud 因上下文不足而扩大改动。
+
 ## 5. Setup Script
+
 
 Setup script 用来准备云端环境，例如：
 
@@ -149,6 +165,7 @@ Cloud 任务可能需要联网或 secret。规则：
 
 ## 7. App 到 Cloud 的接力
 
+
 常见流程：
 
 ```text
@@ -164,6 +181,7 @@ Cloud 是辅助执行，不是绕过 Review。
 
 ## 8. Cloud 回到 App 怎么验收
 
+
 Cloud 完成后，回到 App 做：
 
 1. 拉取远端分支或打开对应 PR。
@@ -174,6 +192,17 @@ Cloud 完成后，回到 App 做：
 6. 决定是否继续让 App 修，还是回 Cloud 处理远程 CI。
 
 不要因为 Cloud 任务“通过”就跳过本地 Review。
+
+### 8.1 Cloud 回流的四个常见风险
+
+| 风险 | 检查方式 |
+|---|---|
+| 云端环境和本机不同 | 本地重新跑关键命令 |
+| Cloud 改了范围外文件 | App Review 查看文件列表 |
+| PR 描述过度乐观 | 对照 diff 和测试日志重写 Verification |
+| Secrets / 网络权限过宽 | 检查 environment 和 GitHub connector 权限 |
+
+Cloud 适合长任务，但最终合并仍然要回到 Review、测试和人工判断。
 
 ## 9. Web / Cloud 与 Automations
 
@@ -236,7 +265,7 @@ Cloud 完成后，回到 App 做：
 ---
 
 **课程制作**：老金
-**最后更新**：2026年5月
+**最后更新**：2026年5月30日
 **许可**：本课程采用CC BY-NC-SA 4.0许可
 
 ---

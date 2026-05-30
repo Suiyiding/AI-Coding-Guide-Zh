@@ -17,6 +17,9 @@
 
 ## 什么是 Agent？
 
+
+> **v2026.5.26 / v2026.5.27 复核补充**：多 Agent 不只是“多开几个会话”。新版把 Transcript、Control UI Activity、Codex mirrors、Talk / Discord voice、Gateway reply cache 和 session store 继续收敛到可观测路径；计划任务方面 `cron.maxConcurrentRuns` 默认提升到 8，让 scheduled automations 和 isolated agent turns 能并行推进。排查多 Agent 卡住时，先看 Activity / transcript / Gateway 日志，再看具体 channel 或 provider。
+
 在 OpenClaw 的世界里，Agent 就是一个独立的 AI 助手实例。每个 Agent 有自己的"大脑"（系统指令）、"记忆"（记忆文件）、"技能"（技能集）和"身份"（认证凭证）。
 
 你可以把 Agent 想象成公司里的员工：
@@ -85,6 +88,8 @@ Agent = 一个独立的 AI 员工
 ## OpenClaw 的 Agent 架构
 
 ### 架构总览
+
+> **v2026.5.22 子代理注意**：默认子 Agent bootstrap context 已收窄到 `AGENTS.md` 与 `TOOLS.md`，不会自动把 persona、identity、user、memory、heartbeat、setup 等文件全部带入 delegated workers。多 Agent 教程里的“自动继承上下文”应按最小必要上下文理解。
 
 > ⏭️ **小白可跳过** — 这是底层运行时细节
 
@@ -195,6 +200,7 @@ Agent 之间默认没有任何共享：
 每个 Agent 的工作空间是它的"家"。AI 的文件操作默认在这个目录下进行，记忆文件也存在这里。其中 `AGENTS.md`（Agent 的系统指令文件）定义了 Agent 之间的协作规则。
 
 ## Agent 角色定义和配置
+
 
 ### 创建新 Agent
 
@@ -717,6 +723,7 @@ openclaw agents list
 ```
 
 ## 任务分发和协调策略
+
 
 ### 策略一：按职能分工
 
